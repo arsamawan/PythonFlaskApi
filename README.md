@@ -40,7 +40,7 @@ This project is a Python-based Flask API for managing room data and recording te
 3. **Run the Application**:  
    Start the Flask app:
    ```bash
-   python script_name.py
+   python app.py
    ```
    The API will be accessible at `http://localhost:5000`.
 
