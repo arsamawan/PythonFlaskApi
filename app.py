@@ -2,12 +2,12 @@ from urllib import request
 from sqlalchemy import create_engine
 import urllib.request
 from datetime import datetime , timezone
-# import datetime
 from flask import Flask , request
 import os
 import psycopg2
 from dotenv import load_dotenv
 
+# SQL QUERIES
 CREATE_ROOMS_TABLE = (
     "CREATE TABLE IF NOT EXISTS rooms(id SERIAL PRIMARY KEY , name TEXT);"
 )
@@ -18,21 +18,17 @@ INSERT_ROOM_RETURN_ID = "INSERT INTO rooms(name) VALUES (%s) RETURNING id;"
 INSERT_TEMP = (
     "INSERT INTO temperatures(room_id, temperature, date) VALUES (%s, %s, %s);"
 )
-
 GLOBAL_NUMBER_OF_DAYS = (
     """SELECT COUNT (DISTINCT DATE(date)) AS days FROM temperatures"""
 )
-
 GLOBAL_AVG = """SELECT AVG(temperature) as average FROM temperatures"""
 load_dotenv()
 app = Flask(__name__)
-# url = os.getenv("DATABASE_URL")
-# url = create_engine('postgresql+psycopg2://postgres:admin@localhost:5432/test')
 connection = psycopg2.connect(database = "test",
                               user = "postgres",
                               password = "admin",
                               port = 5432)
-
+# ENDPOINTS
 @app.post('/api/rooms')
 def create_room():
     data = request.get_json()
@@ -64,9 +60,7 @@ def add_temperature():
         with connection.cursor() as cursor:
             cursor.execute(CREATE_TEMPS_TABLE)
             cursor.execute(INSERT_TEMP, (room_id, temperature, date))
-            # room_id = cursor.fetchone()[0]
     return {
-        # "id": room_id,
         "message": "temperature added"}, 201
 
 
